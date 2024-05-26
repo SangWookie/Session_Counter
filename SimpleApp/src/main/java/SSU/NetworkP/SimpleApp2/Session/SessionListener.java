@@ -7,17 +7,19 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 @WebListener
 public class SessionListener implements HttpSessionListener {
-    private static Logger logger = LoggerFactory.getLogger(SessionListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(SessionListener.class);
     private static final AtomicInteger sessionCount = new AtomicInteger(0);
+
+    private final String FILE_PATH = "./session_count3.log";
 
     @Override
     public void sessionCreated(HttpSessionEvent event) {
@@ -37,11 +39,11 @@ public class SessionListener implements HttpSessionListener {
     }
 
     private void writeSessionCountToFile() {
-        String filePath = "./session_count.txt"; // 파일 경로를 적절히 수정하세요
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write("Total sessions: " + getTotalSessionCount() + "\n");
+//        String FILE_PATH = "./test.txt";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH, false))) {
+            writer.println(new Date() + " - Total sessions: " + getTotalSessionCount());
         } catch (IOException e) {
-            logger.error("Error writing session count to file", e);
+            e.printStackTrace();
         }
     }
 }
